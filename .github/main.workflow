@@ -1,9 +1,12 @@
 workflow "Build, Push Image" {
   on = "push"
-  resolves = ["Package"]
+  resolves = ["Install: UI"]
 }
 
-action "Package" {
-  uses = "LucaFeger/action-maven-cli@aed8a1fd96b459b9a0be4b42a5863843cc70724e"
-  args = "package"
+action "Install: UI" {
+  uses = "gmatheu/action-maven-cli@oracle-jdk-8"
+  args = "-f ui/pom.xml install"
+  env = {
+    ACCEPT_ORACLE_BCLA = "true"
+  }
 }
