@@ -19,7 +19,7 @@ action "UI: Install" {
 
 action "Package" {
   uses = "gmatheu/action-maven-cli@d2fe9c5"
-  args = "-DblackBoxTests.skip=true -DskipTests=true package"
+  args = "-X -DblackBoxTests.skip=true -DskipTests=true package"
   env = {
     ACCEPT_ORACLE_BCLA = "true"
   }
