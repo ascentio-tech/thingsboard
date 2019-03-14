@@ -1,11 +1,6 @@
 workflow "Build Image" {
   on = "push"
-  resolves = ["UI: npm install", "UI: Install", "Package"]
-}
-
-action "UI: npm install" {
-  uses = "actions/npm@4633da3702a5366129dca9d8cc3191476fc3433c"
-  args = "install --prefix ui ui"
+  resolves = ["UI: Install", "Package", "Docker Login"]
 }
 
 action "UI: Install" {
@@ -14,14 +9,18 @@ action "UI: Install" {
   env = {
     ACCEPT_ORACLE_BCLA = "true"
   }
-  needs = ["UI: npm install"]
 }
 
 action "Package" {
   uses = "gmatheu/action-maven-cli@d2fe9c5"
-  args = "-X -DblackBoxTests.skip=true -DskipTests=true package"
+  args = "-DblackBoxTests.skip=true -DskipTests=true -Ddockerfile.skip=false -Ddocker.repo=ascentiotech -Ppush-docker-image install"
   env = {
     ACCEPT_ORACLE_BCLA = "true"
   }
-  needs = ["UI: Install"]
+  needs = ["UI: Install", "Docker Login"]
+}
+
+action "Docker Login" {
+  uses = "actions/docker/login@master"
+  secrets = ["DOCKER_USERNAME", "DOCKER_PASSWORD"]
 }
