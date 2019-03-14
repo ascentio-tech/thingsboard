@@ -87,7 +87,6 @@
     "tinycolor2": "^1.4.1",
     "tooltipster": "^4.2.4",
     "typeface-roboto": "0.0.22",
-    "ui-select": "^0.19.8",
     "v-accordion": "^1.6.0"
   },
   "devDependencies": {
