@@ -76,9 +76,9 @@ export default function WidgetController($scope, $state, $timeout, $window, $ele
         defaultSubscription: null,
         dashboardTimewindow: dashboardTimewindow,
         timewindowFunctions: {
-            onUpdateTimewindow: function(startTimeMs, endTimeMs) {
+            onUpdateTimewindow: function(startTimeMs, endTimeMs, interval) {
                 if (widgetContext.defaultSubscription) {
-                    widgetContext.defaultSubscription.onUpdateTimewindow(startTimeMs, endTimeMs);
+                    widgetContext.defaultSubscription.onUpdateTimewindow(startTimeMs, endTimeMs, interval);
                 }
             },
             onResetTimewindow: function() {
@@ -138,7 +138,7 @@ export default function WidgetController($scope, $state, $timeout, $window, $ele
         headerAction.icon = descriptor.icon;
         headerAction.descriptor = descriptor;
         headerAction.onAction = function($event) {
-            var entityInfo = getFirstEntityInfo();
+            var entityInfo = getActiveEntityInfo();
             var entityId = entityInfo ? entityInfo.entityId : null;
             var entityName = entityInfo ? entityInfo.entityName : null;
             handleWidgetAction($event, this.descriptor, entityId, entityName);
@@ -502,13 +502,15 @@ export default function WidgetController($scope, $state, $timeout, $window, $ele
         }
     }
 
-    function getFirstEntityInfo() {
-        var entityInfo;
-        for (var id in widgetContext.subscriptions) {
-            var subscription = widgetContext.subscriptions[id];
-            entityInfo = subscription.getFirstEntityInfo();
-            if (entityInfo) {
-                break;
+    function getActiveEntityInfo() {
+        var entityInfo = widgetContext.activeEntityInfo;
+        if (!entityInfo) {
+            for (var id in widgetContext.subscriptions) {
+                var subscription = widgetContext.subscriptions[id];
+                entityInfo = subscription.getFirstEntityInfo();
+                if (entityInfo) {
+                    break;
+                }
             }
         }
         return entityInfo;

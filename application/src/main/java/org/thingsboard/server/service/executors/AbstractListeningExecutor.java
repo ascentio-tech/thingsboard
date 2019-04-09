@@ -34,7 +34,7 @@ public abstract class AbstractListeningExecutor implements ListeningExecutor {
 
     @PostConstruct
     public void init() {
-        this.service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(getThreadPollSize()));
+        this.service = MoreExecutors.listeningDecorator(Executors.newWorkStealingPool(getThreadPollSize()));
     }
 
     @PreDestroy
