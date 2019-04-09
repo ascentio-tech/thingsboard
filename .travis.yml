@@ -9,4 +9,18 @@ language: java
 sudo: required
 services:
   - docker
-script: mvn clean verify -Ddockerfile.skip=false -DblackBoxTests.skip=false -DblackBoxTests.skipTailChildContainers=true
+
+jobs:
+  include:
+    - stage: verify
+      script: mvn clean verify -Ddockerfile.skip=false -DblackBoxTests.skip=false -DblackBoxTests.skipTailChildContainers=true
+    - stage: push
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - mvn -DblackBoxTests.skip=true -DskipTests=true -Ddockerfile.skip=false -Ddocker.repo=ascentiotech -Ppush-docker-image install
+
+stages:
+  - verify
+  - name: push
+    if: branch = master
+
