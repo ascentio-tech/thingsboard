@@ -22,5 +22,6 @@ jobs:
 stages:
   - verify
   - name: push
-    if: branch = master
+    if: branch = master AND \
+        type IN (push)
 
