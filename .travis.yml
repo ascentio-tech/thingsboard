@@ -3,8 +3,14 @@ before_install:
   - export M2_HOME=/usr/local/maven
   - export MAVEN_OPTS="-Dmaven.repo.local=$HOME/.m2/repository -Xms1024m -Xmx3072m"
   - export HTTP_LOG_CONTROLLER_ERROR_STACK_TRACE=false
+addons:
+    sonarcloud:
+      organization: "ascentio-tech"
 jdk:
  - oraclejdk8
+cache:
+    directories:
+      - "$HOME/.m2"
 language: java
 sudo: required
 services:
@@ -13,15 +19,16 @@ services:
 jobs:
   include:
     - stage: verify
-      script: mvn clean verify -Ddockerfile.skip=false -DblackBoxTests.skip=false -DblackBoxTests.skipTailChildContainers=true
+      script:
+        - mvn -Dsonar.projectKey=$SONAR_PROJECT_KEY clean org.jacoco:jacoco-maven-plugin:prepare-agent clean verify sonar:sonar -Ddockerfile.skip=false -DblackBoxTests.skip=false -DblackBoxTests.skipTailChildContainers=true
     - stage: push
       script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - mvn -DblackBoxTests.skip=true -DskipTests=true -Ddockerfile.skip=false -Ddocker.repo=ascentiotech -Ppush-docker-image install
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - mvn -DblackBoxTests.skip=true -DskipTests=true -Ddockerfile.skip=false -Ddocker.repo=ascentiotech -Ppush-docker-image install
 
 stages:
-  - verify
+  - name: verify
   - name: push
     if: branch = master AND \
-        type IN (push)
+        type = push
 
