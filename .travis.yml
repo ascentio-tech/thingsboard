@@ -29,6 +29,5 @@ jobs:
 stages:
   - name: verify
   - name: push
-    if: branch = master AND \
-        type = push
+    if: branch = master AND type = push
 
