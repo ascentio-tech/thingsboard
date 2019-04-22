@@ -92,7 +92,7 @@ module.exports = {
         new CompressionPlugin({
             filename: "[path].gz[query]",
             algorithm: "gzip",
-            test: /\.js$|\.css$|\.svg$|\.ttf$|\.woff$|\.woff2|\.eot$\.json$/,
+            test: /\.js$|\.css$|\.svg$|\.ttf$|\.woff$|\.woff2$|\.eot$|\.json$/,
             threshold: 10240,
             minRatio: 0.8
         }),

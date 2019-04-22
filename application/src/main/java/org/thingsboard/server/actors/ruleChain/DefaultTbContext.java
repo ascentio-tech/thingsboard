@@ -17,6 +17,7 @@ package org.thingsboard.server.actors.ruleChain;
 
 import akka.actor.ActorRef;
 import com.datastax.driver.core.utils.UUIDs;
+import io.netty.channel.EventLoopGroup;
 import org.springframework.util.StringUtils;
 import org.thingsboard.rule.engine.api.ListeningExecutor;
 import org.thingsboard.rule.engine.api.MailService;
@@ -43,10 +44,12 @@ import org.thingsboard.server.common.msg.rpc.ToDeviceRpcRequest;
 import org.thingsboard.server.dao.alarm.AlarmService;
 import org.thingsboard.server.dao.asset.AssetService;
 import org.thingsboard.server.dao.attributes.AttributesService;
+import org.thingsboard.server.dao.cassandra.CassandraCluster;
 import org.thingsboard.server.dao.customer.CustomerService;
 import org.thingsboard.server.dao.dashboard.DashboardService;
 import org.thingsboard.server.dao.device.DeviceService;
 import org.thingsboard.server.dao.entityview.EntityViewService;
+import org.thingsboard.server.dao.nosql.CassandraBufferedRateExecutor;
 import org.thingsboard.server.dao.relation.RelationService;
 import org.thingsboard.server.dao.rule.RuleChainService;
 import org.thingsboard.server.dao.tenant.TenantService;
@@ -56,6 +59,7 @@ import org.thingsboard.server.service.script.RuleNodeJsScriptEngine;
 import scala.concurrent.duration.Duration;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -99,6 +103,12 @@ class DefaultTbContext implements TbContext {
     public void tellSelf(TbMsg msg, long delayMs) {
         //TODO: add persistence layer
         scheduleMsgWithDelay(new RuleNodeToSelfMsg(msg), delayMs, nodeCtx.getSelfActor());
+    }
+
+    @Override
+    public boolean isLocalEntity(EntityId entityId) {
+        Optional<ServerAddress> address = mainCtx.getRoutingService().resolveById(entityId);
+        return !address.isPresent();
     }
 
     private void scheduleMsgWithDelay(Object msg, long delayInMs, ActorRef target) {
@@ -239,6 +249,11 @@ class DefaultTbContext implements TbContext {
     }
 
     @Override
+    public EventLoopGroup getSharedEventLoop() {
+        return mainCtx.getSharedEventLoopGroupService().getSharedEventLoopGroup();
+    }
+
+    @Override
     public MailService getMailService() {
         if (mainCtx.isAllowSystemMailService()) {
             return mainCtx.getMailService();
@@ -279,4 +294,15 @@ class DefaultTbContext implements TbContext {
             }
         };
     }
+
+    @Override
+    public CassandraCluster getCassandraCluster() {
+        return mainCtx.getCassandraCluster();
+    }
+
+    @Override
+    public CassandraBufferedRateExecutor getCassandraBufferedRateExecutor() {
+        return mainCtx.getCassandraBufferedRateExecutor();
+    }
+
 }
