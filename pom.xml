@@ -62,7 +62,7 @@
         <curator.version>4.2.0</curator.version>
         <protobuf.version>3.6.1</protobuf.version>
         <grpc.version>1.19.0</grpc.version>
-        <lombok.version>1.16.18</lombok.version>
+        <lombok.version>1.18.6</lombok.version>
         <paho.client.version>1.1.0</paho.client.version>
         <netty.version>4.1.34.Final</netty.version>
         <os-maven-plugin.version>1.5.0</os-maven-plugin.version>
@@ -83,12 +83,13 @@
             org/thingsboard/server/extensions/core/plugin/telemetry/gen/**/*
         </sonar.exclusions>
         <elasticsearch.version>5.0.2</elasticsearch.version>
-        <delight-nashorn-sandbox.version>0.1.14</delight-nashorn-sandbox.version>
+        <delight-nashorn-sandbox.version>0.1.22</delight-nashorn-sandbox.version>
         <kafka.version>2.0.0</kafka.version>
         <bucket4j.version>4.1.1</bucket4j.version>
         <fst.version>2.57</fst.version>
         <antlr.version>2.7.7</antlr.version>
         <snakeyaml.version>1.23</snakeyaml.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <modules>
@@ -127,8 +128,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.5.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -160,6 +161,22 @@
                     <groupId>org.fortasoft</groupId>
                     <artifactId>gradle-maven-plugin</artifactId>
                     <version>1.0.8</version>
+                    <configuration>
+                        <gradleVersion>5.3.1</gradleVersion>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                          <groupId>org.gradle</groupId>
+                          <artifactId>gradle-tooling-api</artifactId>
+                          <version>5.3.1</version>
+                      </dependency>
+                      <dependency>
+                          <groupId>org.codehaus.groovy</groupId>
+                          <artifactId>groovy-all</artifactId>
+                          <version>2.5.6</version>
+                          <type>pom</type>
+                      </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -336,6 +353,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
         </dependency>
     </dependencies>
 
