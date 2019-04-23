@@ -89,6 +89,7 @@
         <fst.version>2.57</fst.version>
         <antlr.version>2.7.7</antlr.version>
         <snakeyaml.version>1.23</snakeyaml.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <modules>
@@ -127,8 +128,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.5.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                     </configuration>
                 </plugin>
                 <plugin>
