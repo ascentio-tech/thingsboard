@@ -260,6 +260,25 @@
                 </executions>
             </plugin>
             <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>build-helper-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>regex-property</id>
+                  <goals>
+                    <goal>regex-property</goal>
+                  </goals>
+                  <configuration>
+                    <name>pkg.version</name>
+                    <value>${project.version}</value>
+                    <regex>-</regex>
+                    <replacement></replacement>
+                    <failIfNoMatch>false</failIfNoMatch>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.fortasoft</groupId>
                 <artifactId>gradle-maven-plugin</artifactId>
                 <configuration>
@@ -270,7 +289,7 @@
                     </tasks>
                     <args>
                         <arg>-PprojectBuildDir=${project.build.directory}</arg>
-                        <arg>-PprojectVersion=${project.version}</arg>
+                        <arg>-PprojectVersion=${pkg.version}</arg>
                         <arg>-PmainJar=${project.build.directory}/${project.build.finalName}-boot.${project.packaging}</arg>
                         <arg>-PpkgName=${pkg.name}</arg>
                         <arg>-PpkgInstallFolder=${pkg.installFolder}</arg>
@@ -309,7 +328,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
                 <configuration>
-                    <file>${project.build.directory}/${pkg.name}_${project.version}-1_all.deb</file>
+                    <file>${project.build.directory}/${pkg.name}_${pkg.version}-1_all.deb</file>
                     <artifactId>${project.artifactId}</artifactId>
                     <groupId>${project.groupId}</groupId>
                     <version>${project.version}</version>
