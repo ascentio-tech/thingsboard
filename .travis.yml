@@ -20,7 +20,7 @@ jobs:
   include:
     - stage: verify
       script:
-        - mvn -Dsonar.projectKey=$SONAR_PROJECT_KEY clean org.jacoco:jacoco-maven-plugin:prepare-agent clean verify sonar:sonar -Ddockerfile.skip=false -DblackBoxTests.skip=false -DblackBoxTests.skipTailChildContainers=true
+        - mvn -Dsonar.projectKey=$SONAR_PROJECT_KEY clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Ddockerfile.skip=false -DblackBoxTests.skip=false -DblackBoxTests.skipTailChildContainers=true
     - stage: push
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
