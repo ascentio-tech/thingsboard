@@ -386,7 +386,7 @@ function EntitiesTableWidgetController($element, $scope, $filter, $mdMedia, $mdP
     }
 
     const getDescendantProp = (obj, path) => (
-        path.split('.').reduce((acc, part) => acc && acc[part], obj)
+        path.split('.').reduce((acc, part) => acc && acc[part], obj) || obj[path]
     );
 
     function getEntityValue(entity, key) {
